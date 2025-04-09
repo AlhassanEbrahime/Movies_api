@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/v1/movies")
+@RequestMapping("/movies")
 public class OMDbClientController {
 
     private final OMDbClientService omDbClientService;

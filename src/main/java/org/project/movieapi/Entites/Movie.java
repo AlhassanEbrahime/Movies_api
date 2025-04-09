@@ -2,6 +2,7 @@ package org.project.movieapi.Entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +30,13 @@ public class Movie {
     private String country;
     private String poster;
     private String imdbRating;
+
+    private float averageRate;
+
+
+    @OneToMany(mappedBy = "movie")
+    private List<Rate> rates ;
+
+
 
 }

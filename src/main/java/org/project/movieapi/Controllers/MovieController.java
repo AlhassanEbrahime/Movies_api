@@ -1,6 +1,5 @@
 package org.project.movieapi.Controllers;
 
-
 import lombok.RequiredArgsConstructor;
 import org.project.movieapi.DTOs.Responses.MovieResponseDto;
 import org.project.movieapi.Services.MovieService;
@@ -14,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/movies")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users/movies")
-public class UserMovieController{
+public class MovieController {
 
     private final MovieService movieService;
 
@@ -27,5 +26,9 @@ public class UserMovieController{
     }
 
 
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public void deleteMovie() {
+//        // TODO bla bla bla
+//    }
 
 }
