@@ -37,7 +37,7 @@ public class AppConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return userService::findByEmail;
+        return userService::findByUsername;
     }
 
 
