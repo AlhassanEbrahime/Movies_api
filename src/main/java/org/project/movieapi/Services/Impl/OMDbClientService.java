@@ -1,6 +1,6 @@
 package org.project.movieapi.Services.Impl;
 import lombok.extern.slf4j.Slf4j;
-import org.project.movieapi.DTOs.Responses.MovieSearchResponseDto;
+import org.project.movieapi.DTOs.Responses.OMDbResponse;
 import org.project.movieapi.Exceptions.MovieApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,11 @@ public class OMDbClientService {
         this.apiKey = apiKey;
     }
 
-
-    public MovieSearchResponseDto searchMovie(String searchTerm){
+    public OMDbResponse searchMovie(String searchTerm){
         try {
             String url = buildSearchUrl(searchTerm);
             System.out.println(url);
-            return restTemplate.getForObject(url, MovieSearchResponseDto.class);
+            return restTemplate.getForObject(url, OMDbResponse.class);
         }catch (RestClientException e){
             log.error("Error searching movie with term {}: {}", searchTerm, e.getMessage());
             throw new MovieApiException("Failed to search movies", e);
@@ -36,12 +35,16 @@ public class OMDbClientService {
 
     }
 
-    private String buildSearchUrl(String searchTerm){
-        return UriComponentsBuilder.fromPath("/")
-                .queryParam("apiKey", apiKey)
-                .queryParam("t", searchTerm)
+
+    private String buildSearchUrl(String searchTerm) {
+        return UriComponentsBuilder
+                .fromPath("/")
+                .queryParam("apikey", apiKey)
+                .queryParam("s", searchTerm)
                 .build()
-                .toString();
+                .toUriString();
     }
+
+
 
 }

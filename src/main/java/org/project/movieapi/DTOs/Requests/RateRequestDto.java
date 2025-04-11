@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @AllArgsConstructor
 public class RateRequestDto {
-    private Long userId;
-    private Long movieId;
+    String imdbId;
     private float rate;
 }

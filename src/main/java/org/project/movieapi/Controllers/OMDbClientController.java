@@ -1,6 +1,7 @@
 package org.project.movieapi.Controllers;
 
 import org.project.movieapi.DTOs.Responses.MovieSearchResponseDto;
+import org.project.movieapi.DTOs.Responses.OMDbResponse;
 import org.project.movieapi.Services.Impl.OMDbClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class OMDbClientController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<MovieSearchResponseDto> searchMovies(
+    public ResponseEntity<OMDbResponse> searchMovies(
             @RequestParam String query) {
         return ResponseEntity.ok(omDbClientService.searchMovie(query));
     }

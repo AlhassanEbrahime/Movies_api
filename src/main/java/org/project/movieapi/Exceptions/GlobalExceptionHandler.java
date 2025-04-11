@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +23,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMovieApiException(MovieApiException ex){
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.SERVICE_UNAVAILABLE.value(),
-                "Movie API service unavailable",
-                ex.getMessage()
+                ex.getMessage(),
+                new Date()
         );
 
         return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
@@ -33,8 +34,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleEntityNotfoundException(Exception ex){
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
-                "Not found",
-                ex.getMessage()
+                ex.getMessage(),
+                new Date()
         );
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
@@ -45,8 +46,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleEntityExistsException(Exception ex){
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
-                "user already registered",
-                ex.getMessage()
+                ex.getMessage(),
+                new Date()
         );
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
@@ -68,8 +69,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
-                "Not found",
-                ex.getMessage()
+                ex.getMessage(),
+                new Date()
         );
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }

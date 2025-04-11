@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.project.movieapi.Services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
+    private final UserService userService;
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
@@ -100,6 +102,25 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public boolean hasRole(String token, String role) {
+        Claims claims = extractAllClaims(token);
+        String email = claims.get("sub", String.class);
+        String userRole = userService.findByEmail(email).getRole().name();
+        return userRole.equals(role);
+    }
+
+    public boolean hasAnyRole(String token, String... roles) {
+        Claims claims = extractAllClaims(token);
+        String email = claims.get("sub", String.class);
+        String adminRole = userService.findByEmail(email).getRole().name();
+        for (String role : roles) {
+            if (adminRole.equals(role)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Key getSignInKey() {

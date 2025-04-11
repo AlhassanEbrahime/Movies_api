@@ -1,5 +1,6 @@
 package org.project.movieapi.Services.Impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.project.movieapi.DTOs.Requests.MovieRequestDto;
@@ -30,16 +31,25 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public String addMovie(MovieRequestDto movieRequestDto) {
+    public void addMovie(MovieRequestDto movieRequestDto) {
+        if(movieRepository.existsByImdbId(movieRequestDto.getImdbId())){
+            throw new EntityExistsException("Movie already exists");
+        }
         Movie movie = movieMapper.toEntity(movieRequestDto);
         movieRepository.save(movie);
-        return "success";
     }
 
     @Override
     public Movie getMovieById(Long movieId) {
-        return movieRepository.findById(movieId)
+         return movieRepository.findById(movieId)
                 .orElseThrow(()-> new EntityNotFoundException("Movie not found with id "+ movieId));
+
+    }
+
+    @Override
+    public Movie findByImdbId(String imdbId){
+        return movieRepository.findByImdbId(imdbId).
+                orElseThrow(()->new EntityNotFoundException("Movie not found with imdbId "+ imdbId));
     }
 
     @Override
@@ -48,16 +58,29 @@ public class MovieServiceImpl implements MovieService {
         movieRepository.delete(existingMovie);
     }
 
+
+    @Override
+    public void batchAddMovies(List<MovieRequestDto> movies ) {
+        for (var movie : movies){
+            movieRepository.existsByImdbId(movie.getImdbId());
+            addMovie(movie);
+        }
+    }
+
+    @Override
+    public void saveMovie(Movie movie) {
+        movieRepository.save(movie);
+    }
+
+
     @Override
     public void batchDeleteMovies(List<Long> ids) {
-        //TODO
+        for( Long id : ids){
+            deleteMovie(id);
+        }
     }
 
-    @Override
-    public void batchAddMovies(List<MovieRequestDto> movies) {
 
-        //TODO
-    }
 
 
 }

@@ -13,11 +13,13 @@ import java.util.List;
 public interface MovieService {
 
     Page<MovieResponseDto> getAllMovies(Pageable pageable);
-    String addMovie(MovieRequestDto movieRequestDto);
+    void addMovie(MovieRequestDto movieRequestDto);
     Movie getMovieById(Long id);
+    Movie findByImdbId(String imdbId);
     void deleteMovie(Long id);
     void batchDeleteMovies(List<Long>ids);
-    void batchAddMovies(List<MovieRequestDto> movies);
+    void batchAddMovies(List<MovieRequestDto> imdbIds);
+    void saveMovie(Movie movie);
 
 
 }

@@ -1,23 +1,29 @@
 package org.project.movieapi.Controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.project.movieapi.DTOs.Requests.MovieRequestDto;
 import org.project.movieapi.DTOs.Responses.MovieResponseDto;
+import org.project.movieapi.Entites.Movie;
+import org.project.movieapi.Mappers.MovieMapper;
 import org.project.movieapi.Services.MovieService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("movies")
 @RequiredArgsConstructor
 public class MovieController {
 
     private final MovieService movieService;
+    private final MovieMapper movieMapper;
 
     @GetMapping
     public ResponseEntity<Page<MovieResponseDto>> getAllMovies(@PageableDefault Pageable pageable){
@@ -26,9 +32,44 @@ public class MovieController {
     }
 
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public void deleteMovie() {
-//        // TODO bla bla bla
-//    }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public ResponseEntity<MovieResponseDto> getMovie(@PathVariable Long id){
+        Movie movie = movieService.getMovieById(id);
+        MovieResponseDto responseMovie = movieMapper.toMovieResponseDto(movie);
+        return new ResponseEntity<>(responseMovie, HttpStatus.OK);
+    }
+
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> addMovie(@Valid @RequestBody MovieRequestDto movieRequestDto){
+        movieService.addMovie(movieRequestDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> deleteMovie(@PathVariable Long id){
+        movieService.deleteMovie(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/batch-add")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public  ResponseEntity<String> addMovieBatches(@Valid @RequestBody List<MovieRequestDto> movies){
+        movieService.batchAddMovies(movies);
+        return ResponseEntity.ok("Movies added successfully");
+    }
+
+    @DeleteMapping("/batch-delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> deleteMovieBatches(@Valid @RequestBody List<Long> ids){
+        movieService.batchDeleteMovies(ids);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }
