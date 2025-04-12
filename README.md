@@ -1,6 +1,52 @@
 # Movie API Documentation
 
-This README provides comprehensive documentation for the Movie API, detailing authentication processes and movie-related endpoints. The API is designed to manage movie data, including searching, adding, rating, and deleting movies, with secure authentication mechanisms.
+## Prerequisites
+Ensure you have:
+- Java 17+
+- Maven
+- MySQL
+
+## Clone the Repository
+```bash
+git clon https://github.com/AlhassanEbrahime/Movies_api.git
+```
+
+## Configure the Database
+Update `application.properties` or `application.yml` with your MySQL database credentials:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/your_database
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+```
+
+## Install Dependencies & Run
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+## Tech Stack
+- Spring Boot 3 (Backend)
+- Spring Security (JWT & Role-based Access)
+- Spring Data JPA (Database Interaction)
+- MySQL (Database)
+- JWT (JSON Web Token) (Authentication with Refresh Token and Access Token)
+- MapStruct (Object Mapping)
+- OMDb API (Fetching Movie Data)
+
+## Features
+### Movie Management
+- **Fetch Movies**: Retrieve movies from OMDb API or the database.
+- **Add Movies**: Admins can add movies to the database.
+- **Delete Movies**: Admins can delete movies.
+- **Pagination**: Supports paginated movie listings.
+
+### Authentication & Authorization
+- User Registration & Login using JWT (Access Token and Refresh Token).
+- Role-based Access Control:
+  - **ADMIN**: Can add, delete, and manage movies.
+  - **USER**: Can search , view movies and can rate a movie.
 
 ## Base URL
 All endpoints are relative to:
@@ -17,7 +63,7 @@ Register a new user account.
 - **Body** (JSON):
   ```json
   {
-      "username": "hasan",
+      "username": "admin",
       "email": "admin@org.com",
       "password": "1234234"
   }
@@ -202,4 +248,5 @@ Submit a rating for a movie.
 - **Authorization**: Most endpoints require a Bearer token in the `Authorization` header. Ensure tokens are valid and not expired.
 - **Admin Access**: Endpoints like adding or deleting movies require admin-level authorization.
 - **Error Handling**: The API returns standard HTTP status codes (e.g., 200 for success, 401 for unauthorized, 404 for not found).
+
 
