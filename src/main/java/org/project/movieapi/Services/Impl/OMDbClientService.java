@@ -1,8 +1,14 @@
 package org.project.movieapi.Services.Impl;
 import lombok.extern.slf4j.Slf4j;
+import org.project.movieapi.DTOs.Requests.MovieRequestDto;
+import org.project.movieapi.DTOs.Responses.MovieResponseDto;
 import org.project.movieapi.DTOs.Responses.OMDbResponse;
+import org.project.movieapi.Entites.Movie;
 import org.project.movieapi.Exceptions.MovieApiException;
+import org.project.movieapi.Mappers.MovieMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +21,9 @@ public class OMDbClientService {
     private final RestTemplate restTemplate;
 
     private final String apiKey;
+
+    @Autowired
+    private MovieMapper movieMapper;
 
 
     public OMDbClientService(RestTemplate restTemplate, @Value("${omdb.api.key}") String apiKey) {
@@ -45,6 +54,19 @@ public class OMDbClientService {
                 .toUriString();
     }
 
+
+
+    public MovieResponseDto getMovieByIdFromOmdbApi(String imdbID) {
+        String url = "https://www.omdbapi.com/?i=" + imdbID + "&"+apiKey;
+        ResponseEntity<Movie> response = restTemplate.getForEntity(url, Movie.class);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            Movie movieResponse = response.getBody();
+            return movieMapper.toMovieResponseDto(movieResponse);
+        } else {
+            throw new RuntimeException("Movie not found in OMDb API");
+        }
+    }
 
 
 }

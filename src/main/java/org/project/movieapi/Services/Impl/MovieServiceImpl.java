@@ -10,6 +10,7 @@ import org.project.movieapi.Mappers.MovieMapper;
 import org.project.movieapi.Repositories.MovieRepository;
 import org.project.movieapi.Services.MovieService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
@@ -25,9 +26,10 @@ public class MovieServiceImpl implements MovieService {
     private final MovieMapper movieMapper;
 
     @Override
-    public Page<MovieResponseDto> getAllMovies(Pageable pageable) {
-        Page<Movie> page = movieRepository.findAll(pageable);
-        return page.map(movieMapper::toMovieResponseDto);
+    public Page<MovieResponseDto> getAllMovies(int pageNumber) {
+        PageRequest page = PageRequest.of(pageNumber-1,12);
+        Page<Movie> moviePage = movieRepository.findAll(page);
+        return moviePage.map(movieMapper::toMovieResponseDto);
     }
 
     @Override
@@ -79,6 +81,9 @@ public class MovieServiceImpl implements MovieService {
             deleteMovie(id);
         }
     }
+
+
+
 
 
 

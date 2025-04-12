@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface MovieService {
 
-    Page<MovieResponseDto> getAllMovies(Pageable pageable);
+    Page<MovieResponseDto> getAllMovies(int pageNumber);
     void addMovie(MovieRequestDto movieRequestDto);
     Movie getMovieById(Long id);
     Movie findByImdbId(String imdbId);
