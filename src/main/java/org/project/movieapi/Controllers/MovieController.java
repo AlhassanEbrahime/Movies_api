@@ -34,7 +34,7 @@ public class MovieController {
 
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<MovieResponseDto> getMovie(@PathVariable Long id){
         Movie movie = movieService.getMovieById(id);
         MovieResponseDto responseMovie = movieMapper.toMovieResponseDto(movie);
@@ -55,7 +55,7 @@ public class MovieController {
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id){
         movieService.deleteMovie(id);
         return ResponseEntity.noContent().build();
@@ -63,21 +63,18 @@ public class MovieController {
 
 
     @PostMapping("/batch-add")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public  ResponseEntity<String> addMovieBatches(@Valid @RequestBody List<MovieRequestDto> movies){
         movieService.batchAddMovies(movies);
         return ResponseEntity.ok("Movies added successfully");
     }
 
     @DeleteMapping("/batch-delete")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteMovieBatches(@Valid @RequestBody List<Long> ids){
         movieService.batchDeleteMovies(ids);
         return ResponseEntity.noContent().build();
     }
-
-
-
 
 
 
